@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"openpak/x360-kdc/internal/rc4hmac"
+	"github.com/openpak/x360-common/rc4hmac"
 )
 
 // AccountLen is the 84-byte record MACS installs into the console

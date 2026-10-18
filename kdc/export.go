@@ -3,7 +3,7 @@ package kdc
 import (
 	"time"
 
-	"openpak/x360-kdc/internal/der"
+	"github.com/openpak/x360-common/der"
 )
 
 // Exported views of the Kerberos helpers the security gateway shares with the

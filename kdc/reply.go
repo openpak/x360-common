@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"openpak/x360-kdc/internal/der"
-	"openpak/x360-kdc/internal/rc4hmac"
+	"github.com/openpak/x360-common/der"
+	"github.com/openpak/x360-common/rc4hmac"
 )
 
 // Encoders for the replies. Field order and every constant mirror the oracle

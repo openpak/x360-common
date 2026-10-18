@@ -19,8 +19,8 @@ import (
 	"net/netip"
 	"time"
 
-	"openpak/x360-kdc/internal/accountcore"
-	"openpak/x360-kdc/internal/der"
+	"github.com/openpak/x360-common/accountcore"
+	"github.com/openpak/x360-common/der"
 )
 
 // Realms and names the firmware uses. The account realm is the MACS realm

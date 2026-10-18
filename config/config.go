@@ -1,4 +1,4 @@
-// Package config loads x360-kdc configuration from the environment.
+// Package config loads the x360 services' configuration from the environment.
 package config
 
 import (

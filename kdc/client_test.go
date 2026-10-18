@@ -16,8 +16,8 @@ import (
 	"testing"
 	"time"
 
-	"openpak/x360-kdc/internal/der"
-	"openpak/x360-kdc/internal/rc4hmac"
+	"github.com/openpak/x360-common/der"
+	"github.com/openpak/x360-common/rc4hmac"
 )
 
 const ceText = "Xbox Version=2.00.17559.0 Title=0xFFFE07D1 TitleVersion=0\x00"

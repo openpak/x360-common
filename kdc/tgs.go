@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"openpak/x360-kdc/internal/der"
-	"openpak/x360-kdc/internal/rc4hmac"
+	"github.com/openpak/x360-common/der"
+	"github.com/openpak/x360-common/rc4hmac"
 )
 
 // D6 (padata 0xD6 plaintext, 126 bytes, firmware 819484F8), little-endian:

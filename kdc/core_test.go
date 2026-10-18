@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"openpak/x360-kdc/internal/accountcore"
+	"github.com/openpak/x360-common/accountcore"
 )
 
 type stubCore struct {

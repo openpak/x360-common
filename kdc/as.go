@@ -11,9 +11,9 @@ import (
 	"strings"
 	"time"
 
-	"openpak/x360-kdc/internal/accountcore"
-	"openpak/x360-kdc/internal/der"
-	"openpak/x360-kdc/internal/rc4hmac"
+	"github.com/openpak/x360-common/accountcore"
+	"github.com/openpak/x360-common/der"
+	"github.com/openpak/x360-common/rc4hmac"
 )
 
 // Padata 0xDB (MACS console block), 828 bytes, built by XAM at 81946C70:

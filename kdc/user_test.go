@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"openpak/x360-kdc/internal/der"
-	"openpak/x360-kdc/internal/rc4hmac"
+	"github.com/openpak/x360-common/der"
+	"github.com/openpak/x360-common/rc4hmac"
 )
 
 type fakeDir struct {

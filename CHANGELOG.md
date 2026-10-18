@@ -6,3 +6,5 @@
 - 2026-10-18: `kdc` D7 record: the LE u32 at 0x98 now carries the TGS request's title id (it was zero). The console's
   logon engine stores it as the title of the services in that ticket; its token service (XSTS, REST data recovery)
   stays pending until the service-12 title equals the running title.
+- 2026-10-18: new `xstoken` package: the token x360-xsts issues and the REST services verify (Claims, Signer,
+  FromAuthorization), moved out of x360-xsts.

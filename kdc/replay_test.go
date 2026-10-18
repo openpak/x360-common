@@ -174,6 +174,8 @@ func TestReplayXETGS2(t *testing.T) {
 	for _, id := range D7Services {
 		d7Saved[0x5c+id/4] &^= byte(3 << ((id % 4) * 2))
 	}
+	// ... and before the D7 title (0x98, the request's title id) was filled in.
+	copy(d7Saved[0x98:0x9c], d7[0x98:0x9c])
 	if !bytes.Equal(d7, d7Saved) {
 		t.Fatalf("D7 differs from the record the firmware accepted:\n%x\n%x", d7, d7Saved)
 	}

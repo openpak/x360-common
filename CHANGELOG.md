@@ -3,3 +3,6 @@
 - 2026-10-18: split out of x360-kdc v0.8.14 (history kept): `kdc`, `accountcore`, `config`, `der`,
   `rc4hmac`, plus the new `wire` package (the account/users header names, formerly constants of the
   gateway package). Import path `github.com/openpak/x360-common/<package>`.
+- 2026-10-18: `kdc` D7 record: the LE u32 at 0x98 now carries the TGS request's title id (it was zero). The console's
+  logon engine stores it as the title of the services in that ticket; its token service (XSTS, REST data recovery)
+  stays pending until the service-12 title equals the running title.

@@ -406,7 +406,7 @@ func tlvLen(b []byte) int {
 }
 
 func TestD7Record(t *testing.T) {
-	rec := d7Record(mustAddr("203.0.113.9"))
+	rec := d7Record(mustAddr("203.0.113.9"), 0xFFFE07D1)
 	if len(rec) != D7Len || !bytes.Equal(rec[0x24:0x28], []byte{203, 0, 113, 9}) {
 		t.Fatalf("%x", rec)
 	}
@@ -451,12 +451,20 @@ func TestD7Extended(t *testing.T) {
 	old, oldExt := D7Services, D7Extended
 	defer func() { D7Services, D7Extended = old, oldExt }()
 	D7Services, D7Extended = []int{1, 20}, ext
-	rec := d7Record(netip.MustParseAddr("10.0.2.2"))
+	rec := d7Record(netip.MustParseAddr("10.0.2.2"), 0xFFFE07D1)
 	if rec[0x5c+6] != 0xff {
 		t.Fatalf("service 25 still in the bitmap: %#x", rec[0x5c+6])
 	}
 	if binary.LittleEndian.Uint32(rec[0x7c:]) != 25 || binary.LittleEndian.Uint16(rec[0x80:]) != 80 || rec[0x82] != 0 ||
 		binary.LittleEndian.Uint32(rec[0x83:]) != 16 || binary.LittleEndian.Uint16(rec[0x87:]) != 1000 {
 		t.Fatalf("extended entries: %x", rec[0x7c:0x98])
+	}
+}
+
+// The D7 record carries the request's title id as the LE u32 at 0x98.
+func TestD7Title(t *testing.T) {
+	rec := d7Record(netip.MustParseAddr("10.0.2.2"), 0xFFFE07D1)
+	if got := binary.LittleEndian.Uint32(rec[0x98:]); got != 0xFFFE07D1 || rec[0x98] != 0xd1 || rec[0x9b] != 0xff {
+		t.Fatalf("title at 0x98: %x", rec[0x98:0x9c])
 	}
 }

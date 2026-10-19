@@ -5,6 +5,25 @@ import (
 	"time"
 )
 
+func TestMatchesXUID(t *testing.T) {
+	for _, tc := range []struct {
+		claim, path string
+		want        bool
+	}{
+		{"0009005f5139dadb", "2533684175035099", true},
+		{"0009005f5139dadb", "0009005F5139DADB", true},
+		{"0009005f5139dadb", "2533684175035100", false},
+		{"ffffffffffffffff", "18446744073709551615", true},
+		{"ffffffffffffffff", "18446744073709551616", false},
+		{"invalid", "0", false},
+		{"0", "", false},
+	} {
+		if got := (Claims{XUID: tc.claim}).MatchesXUID(tc.path); got != tc.want {
+			t.Errorf("claim %q path %q: got %v, want %v", tc.claim, tc.path, got, tc.want)
+		}
+	}
+}
+
 func TestSignVerify(t *testing.T) {
 	now := time.Unix(1_700_000_000, 0)
 	s := &Signer{Key: []byte("k"), Now: func() time.Time { return now }}

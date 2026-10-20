@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-10-20: read account-core birthdays for native age policy, requiring an active matching account.
+
 - 2026-10-20: Social.ListFriends, ListBlocks and discovery-enforcement clients.
 
 - 2026-10-19: Media.GetAvatar client for account avatars.

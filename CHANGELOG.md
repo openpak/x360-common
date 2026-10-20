@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-10-20: Social.ListFriends, ListBlocks and discovery-enforcement clients.
+
 - 2026-10-19: Media.GetAvatar client for account avatars.
 
 - 2026-10-19: compare decimal REST path XUIDs with hexadecimal token claims, retaining hexadecimal

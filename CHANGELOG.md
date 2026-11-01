@@ -1,5 +1,8 @@
 # Changelog
 
+- 2026-11-01: v0.2.0 xuacsapi: client for x360-xuacs's internal identity API (identity, online XUID, XUID to
+  account, console profiles, WLID CA), used by the services split out of xuacs.
+
 - 2026-10-20: read account-core birthdays for native age policy, requiring an active matching account.
 
 - 2026-10-20: Social.ListFriends, ListBlocks and discovery-enforcement clients.

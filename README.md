@@ -32,7 +32,6 @@ Each service uses `replace github.com/openpak/x360-common => ../x360-common` and
 ## Docs
 
 - [Protocol](docs/protocol.md)
-- [Evidence](docs/evidence.md)
 - [Deploy](docs/deploy.md)
 - [Notes](docs/notes.md)
 - [Permanent account handles](docs/handles.md)

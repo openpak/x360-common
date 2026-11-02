@@ -19,12 +19,16 @@ func TestSocialRPCs(t *testing.T) {
 		}
 		var out pb
 		switch r.URL.Path {
-		case "/openpak.account.v1.Social/ListFriends", "/openpak.account.v1.Social/ListBlocks":
+		case "/openpak.account.v1.Social/ListFriends", "/openpak.account.v1.Social/ListBlocks", "/openpak.account.v1.Social/ListIncomingRequests", "/openpak.account.v1.Social/ListOutgoingRequests":
 			for _, id := range []string{"first", "second"} {
 				var friend pb
 				friend.str(1, id)
 				friend.str(2, "Name "+id)
 				out.str(1, string(friend))
+			}
+		case "/openpak.account.v1.Social/Block", "/openpak.account.v1.Social/Unblock":
+			if req.str(2) != "other" {
+				t.Error("wrong blocked account")
 			}
 		case "/openpak.account.v1.Social/CheckInteraction":
 			if req.str(2) != "other" || req.num(3) != 1 {
@@ -45,11 +49,17 @@ func TestSocialRPCs(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, list := range []func(context.Context, string) ([]Friend, error){c.ListFriends, c.ListBlocks} {
+	for _, list := range []func(context.Context, string) ([]Friend, error){c.ListFriends, c.ListBlocks, c.ListIncomingRequests, c.ListOutgoingRequests} {
 		friends, err := list(context.Background(), "owner")
 		if err != nil || len(friends) != 2 || friends[0].AccountID != "first" || friends[1].AccountID != "second" || friends[1].DisplayName != "Name second" {
 			t.Fatalf("repeated projections lost: %+v %v", friends, err)
 		}
+	}
+	if err := c.Block(context.Background(), "owner", "other"); err != nil {
+		t.Fatal(err)
+	}
+	if err := c.Unblock(context.Background(), "owner", "other"); err != nil {
+		t.Fatal(err)
 	}
 	allowed, err := c.CanDiscover(context.Background(), "owner", "other")
 	if err != nil || !allowed {

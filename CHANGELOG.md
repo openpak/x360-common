@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-02: v0.3.0 accountcore: ListIncomingRequests, ListOutgoingRequests, Block and Unblock clients.
+
 - 2026-11-01: v0.2.0 xuacsapi: client for x360-xuacs's internal identity API (identity, online XUID, XUID to
   account, console profiles, WLID CA), used by the services split out of xuacs.
 

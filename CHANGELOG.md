@@ -1,5 +1,8 @@
 # Changelog
 
+- 2026-11-03: v0.4.0 pgstate: Postgres document store (one schema per service, pool of 2, refuses an empty URL) so
+  service state lives in the database, not in files.
+
 - 2026-11-02: v0.3.0 accountcore: ListIncomingRequests, ListOutgoingRequests, Block and Unblock clients.
 
 - 2026-11-01: v0.2.0 xuacsapi: client for x360-xuacs's internal identity API (identity, online XUID, XUID to

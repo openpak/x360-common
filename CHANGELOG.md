@@ -1,5 +1,10 @@
 # Changelog
 
+- 2026-11-03: v0.6.0 kdc: the account store can live in Postgres (`kdc.OpenPGStore`, schema `x360_kdc`, document `accounts`):
+  one-time import of `accounts.json` (file left in place), `Reload` for read-only users (the gateway), `Close`. The file store
+  stays for tests. pgstate.Open uses a schema that already exists without issuing CREATE SCHEMA, so a role without CREATE
+  on the database can use a schema made for it.
+
 - 2026-11-03: v0.5.1 kdc.Server: every datagram line (answered, rejected, recorded) carries `ms`, the handling time.
 
 - 2026-11-03: v0.5.0 httplog: one stderr line per request, `http <method> <path> -> <status> <duration>ms`, and

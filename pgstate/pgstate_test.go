@@ -41,3 +41,25 @@ func TestRefusesEmptyDSN(t *testing.T) {
 		t.Fatalf("err=%v", err)
 	}
 }
+
+// A schema made ahead of time by an admin is used without CREATE on the database.
+func TestExistingSchemaNeedsNoCreateSchema(t *testing.T) {
+	dsn := os.Getenv("X360_TEST_DATABASE_URL")
+	if dsn == "" {
+		t.Skip("X360_TEST_DATABASE_URL not set")
+	}
+	ctx := context.Background()
+	a, err := Open(ctx, dsn, "x360_pgstate_pre")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() {
+		a.Pool().Exec(ctx, "DROP SCHEMA x360_pgstate_pre CASCADE")
+		a.Close()
+	}()
+	b, err := Open(ctx, dsn, "x360_pgstate_pre") // schema exists: no CREATE SCHEMA issued
+	if err != nil {
+		t.Fatal(err)
+	}
+	b.Close()
+}

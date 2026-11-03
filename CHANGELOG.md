@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-03: v0.5.1 kdc.Server: every datagram line (answered, rejected, recorded) carries `ms`, the handling time.
+
 - 2026-11-03: v0.5.0 httplog: one stderr line per request, `http <method> <path> -> <status> <duration>ms`, and
   `httplog.Command` for UDP/TCP commands. Never the query, headers, cookies, tokens or bodies; `/healthz` skipped;
   the status writer keeps Flusher, Hijacker and ResponseController working.

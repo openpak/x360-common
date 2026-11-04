@@ -25,3 +25,18 @@ func TestStatusAndKey(t *testing.T) {
 		t.Fatalf("%v", err)
 	}
 }
+
+func TestAccountXUIDs(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/internal/v1/account-xuids" {
+			w.WriteHeader(404)
+			return
+		}
+		w.Write([]byte(`{"xuids":["0009000000000007","e000000000000001"]}`))
+	}))
+	defer srv.Close()
+	xs, err := (&Client{URL: srv.URL, Key: "k"}).AccountXUIDs(context.Background(), "a")
+	if err != nil || len(xs) != 2 || xs[0] != 0x0009000000000007 || xs[1] != 0xe000000000000001 {
+		t.Fatalf("%x %v", xs, err)
+	}
+}

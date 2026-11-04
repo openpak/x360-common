@@ -1,5 +1,9 @@
 # Changelog
 
+- 2026-11-04: v0.7.0 erase: the account-erasure endpoint of card #120 (`DELETE /internal/accounts/{account_id}/data`, bearer
+  `ACCOUNT_ERASE_KEY`, listener `ERASE_ADDR` default `:9099`, nothing served while the key is unset, one `account erased` log line).
+  xuacsapi: `AccountXUIDs` (every XUID xuacs holds for an account, no allocation).
+
 - 2026-11-03: v0.6.0 kdc: the account store can live in Postgres (`kdc.OpenPGStore`, schema `x360_kdc`, document `accounts`):
   one-time import of `accounts.json` (file left in place), `Reload` for read-only users (the gateway), `Close`. The file store
   stays for tests. pgstate.Open uses a schema that already exists without issuing CREATE SCHEMA, so a role without CREATE

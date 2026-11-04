@@ -10,3 +10,7 @@ there.
 ## Tests
 
 `TMPDIR=<scratch> X360_KDC_TESTKEYS=<dir with the dev keys> go test ./...`
+
+## Account erasure (card #120)
+
+`erase` serves `DELETE /internal/accounts/{account_id}/data` (bearer `ACCOUNT_ERASE_KEY`, listener `ERASE_ADDR`, default `:9099`, container network only). It is not served while the key is unset. `erase.Run` logs the single `account erased` line. Services pass an `erase.Func` that deletes the account's rows; `xuacsapi.Client.AccountXUIDs` lists the XUIDs of an account for the services whose data is keyed by XUID.

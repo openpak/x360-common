@@ -1,5 +1,8 @@
 # Changelog
 
+- 2026-11-04: v0.8.0 kdc: `Store.EraseAccount(ctx, accountID)` removes every console account paired to an OpenPak account
+  (certificate, issued key, core link ids; the Postgres store is re-read first) for the erasure of card #120. Idempotent.
+
 - 2026-11-04: v0.7.0 erase: the account-erasure endpoint of card #120 (`DELETE /internal/accounts/{account_id}/data`, bearer
   `ACCOUNT_ERASE_KEY`, listener `ERASE_ADDR` default `:9099`, nothing served while the key is unset, one `account erased` log line).
   xuacsapi: `AccountXUIDs` (every XUID xuacs holds for an account, no allocation).

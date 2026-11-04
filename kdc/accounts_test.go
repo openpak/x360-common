@@ -2,6 +2,7 @@ package kdc
 
 import (
 	"bytes"
+	"context"
 	"os"
 	"path/filepath"
 	"testing"
@@ -95,5 +96,48 @@ func TestTicketKeyFile(t *testing.T) {
 	os.WriteFile(path, make([]byte, 15), 0o600)
 	if _, err := LoadTicketKey(path); err == nil {
 		t.Fatal("15-byte key accepted")
+	}
+}
+
+func TestEraseAccount(t *testing.T) {
+	const a1, a2 = "11111111-2222-3333-4444-555555555555", "66666666-7777-8888-9999-000000000000"
+	s, err := OpenStore(filepath.Join(t.TempDir(), "accounts.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var names [3]string
+	for i := range names {
+		cert := make([]byte, CertLen)
+		cert[2], cert[3] = byte(i+1), 9
+		if _, _, err := s.Provision(cert, t0); err != nil {
+			t.Fatal(err)
+		}
+		names[i] = ConsoleDigits(cert) + "@" + AccountDomain
+	}
+	if err := s.BindCore(names[0], "l0", a1); err != nil {
+		t.Fatal(err)
+	}
+	if err := s.BindCore(names[1], "l1", a1); err != nil {
+		t.Fatal(err)
+	}
+	if err := s.BindCore(names[2], "l2", a2); err != nil {
+		t.Fatal(err)
+	}
+	n, err := s.EraseAccount(context.Background(), a1)
+	if err != nil || n != 2 {
+		t.Fatalf("first run: %d %v", n, err)
+	}
+	if n, err := s.EraseAccount(context.Background(), a1); err != nil || n != 0 {
+		t.Fatalf("repeat: %d %v", n, err)
+	}
+	if s.Get(names[0]) != nil || s.Get(names[1]) != nil || s.Get(names[2]) == nil {
+		t.Fatal("wrong rows removed")
+	}
+	again, err := OpenStore(s.path)
+	if err != nil || again.Len() != 1 {
+		t.Fatalf("not persisted: %v %d", err, again.Len())
+	}
+	if _, err := s.EraseAccount(context.Background(), ""); err == nil {
+		t.Fatal("empty id must be refused")
 	}
 }

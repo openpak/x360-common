@@ -116,3 +116,38 @@ func TestPGStoreImportsLegacyFileOnce(t *testing.T) {
 		t.Fatal("database content replaced by the file")
 	}
 }
+
+// Erasing through one store is seen by a second store on the same schema.
+func TestPGEraseAccount(t *testing.T) {
+	dsn, schema := pgSchema(t)
+	ctx := context.Background()
+	s, err := OpenPGStore(ctx, dsn, schema, "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer s.Close()
+	other, err := OpenPGStore(ctx, dsn, schema, "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer other.Close()
+	const acct = "11111111-2222-3333-4444-555555555555"
+	cert := make([]byte, CertLen)
+	cert[2], cert[3] = 1, 9
+	if _, _, err := s.Provision(cert, t0); err != nil {
+		t.Fatal(err)
+	}
+	name := ConsoleDigits(cert) + "@" + AccountDomain
+	if err := s.BindCore(name, "l", acct); err != nil {
+		t.Fatal(err)
+	}
+	if n, err := s.EraseAccount(ctx, acct); err != nil || n != 1 {
+		t.Fatalf("%d %v", n, err)
+	}
+	if n, err := s.EraseAccount(ctx, acct); err != nil || n != 0 {
+		t.Fatalf("repeat %d %v", n, err)
+	}
+	if err := other.Reload(ctx); err != nil || other.Get(name) != nil {
+		t.Fatalf("still there: %v", err)
+	}
+}

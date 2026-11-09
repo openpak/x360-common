@@ -1,5 +1,10 @@
 # Changelog
 
+- 2026-11-09: v0.9.0 kdc: the TGS reply's D7 record carries every signed-in user's Live privileges (multiplayer sessions 254,
+  communications 252, profile viewing 249, user-created content 247, purchase content 245, presence 244; no friends-only
+  restrictions), in the layout XAM 17559 reads (shared word at 0x58, per-user words at 0x28 + 12*user). Before, every user had
+  an empty privilege map, so titles greyed out online play (Minecraft "Online game", card #163).
+
 - 2026-11-04: v0.8.0 kdc: `Store.EraseAccount(ctx, accountID)` removes every console account paired to an OpenPak account
   (certificate, issued key, core link ids; the Postgres store is re-read first) for the erasure of card #120. Idempotent.
 

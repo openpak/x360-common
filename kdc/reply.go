@@ -166,6 +166,7 @@ type ExtendedService struct {
 // oracle leaves them.
 func d7Record(sg netip.Addr, title uint32) []byte {
 	rec := make([]byte, D7Len)
+	setUserPrivileges(rec, UserPrivileges)
 	binary.LittleEndian.PutUint32(rec[0x98:], title)
 	ip := sg.As4()
 	copy(rec[0x24:0x28], ip[:])
@@ -186,6 +187,35 @@ func d7Record(sg netip.Addr, title uint32) []byte {
 	}
 	binary.LittleEndian.PutUint64(rec[0xb0:], 1)
 	return rec
+}
+
+// UserPrivileges are the Live privileges every signed-in user holds: the
+// unrestricted ones (multiplayer sessions, communications, profile viewing,
+// user-created content, purchase content, presence), none of the
+// "friends only" restrictions. Titles ask XAM (XUserCheckPrivilege); a user
+// without 254 cannot host or join online games.
+var UserPrivileges = []int{254, 252, 249, 247, 245, 244}
+
+// setUserPrivileges writes privilege bits into the D7 record for all four user
+// slots. XAM (FUN_81949FC8) builds each user's 256-bit privilege map from D7:
+// bits 0..127 are always clear, 128..159 come from the LE u32 at 0x58 (shared
+// by every user), 160..255 from the three LE u32 at 0x28 + 12*user.
+func setUserPrivileges(rec []byte, privs []int) {
+	for _, p := range privs {
+		if p < 128 || p > 255 {
+			continue
+		}
+		bit := uint32(1) << (p & 31)
+		word := (p >> 5) & 7 // 4 = the shared word, 5..7 the per-user ones
+		if word == 4 {
+			binary.LittleEndian.PutUint32(rec[0x58:], binary.LittleEndian.Uint32(rec[0x58:])|bit)
+			continue
+		}
+		for user := 0; user < 4; user++ {
+			off := 0x28 + 12*user + 4*(word-5)
+			binary.LittleEndian.PutUint32(rec[off:], binary.LittleEndian.Uint32(rec[off:])|bit)
+		}
+	}
 }
 
 // ParseD7Services parses "1,20,25"; ParseD7Extended parses "25:80,16:1000".

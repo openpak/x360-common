@@ -468,3 +468,33 @@ func TestD7Title(t *testing.T) {
 		t.Fatalf("title at 0x98: %x", rec[0x98:0x9c])
 	}
 }
+
+// TestD7UserPrivileges decodes the privilege map the way XAM does (FUN_81949FC8,
+// FUN_81A3CD40): every user holds multiplayer (254) and no friends-only
+// restriction (251).
+func TestD7UserPrivileges(t *testing.T) {
+	rec := d7Record(mustAddr("203.0.113.9"), 0x584111F7)
+	has := func(user, p int) bool {
+		var m [8]uint32 // the 256-bit map, words 0..3 always zero
+		m[4] = binary.LittleEndian.Uint32(rec[0x58:])
+		for w := 0; w < 3; w++ {
+			m[5+w] = binary.LittleEndian.Uint32(rec[0x28+12*user+4*w:])
+		}
+		return m[p>>5]&(1<<(p&31)) != 0
+	}
+	for user := 0; user < 4; user++ {
+		for _, p := range []int{254, 252, 249, 247, 245, 244} {
+			if !has(user, p) {
+				t.Errorf("user %d lacks privilege %d", user, p)
+			}
+		}
+		for _, p := range []int{251, 248, 246, 243} {
+			if has(user, p) {
+				t.Errorf("user %d has restriction %d", user, p)
+			}
+		}
+	}
+	if binary.LittleEndian.Uint32(rec[0x98:]) != 0x584111F7 {
+		t.Fatal("title moved")
+	}
+}
